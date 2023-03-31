@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -9,7 +10,7 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with TickerProviderStateMixin {
   final List<String> _images = [
 
     'img1.jpeg',
@@ -19,11 +20,44 @@ class _HomeState extends State<Home> {
     'img5.jpeg'
   ];
   int _selectSize = 1;
+  bool isExpanded = false;
+  bool expand = false;
+  bool expanded = false;
+  bool _isVisible = true;
+  final ScrollController _scrollController = ScrollController();
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _scrollController.dispose();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+        // User is scrolling down
+        if (_isVisible) {
+          setState(() => _isVisible = false);
+
+        }
+      }
+      if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
+        // User is scrolling up
+        if (!_isVisible) {
+          setState(() => _isVisible = true);
+
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     // backgroundColor: Color(0xfffafafa),
+
       appBar: PreferredSize(
 
         preferredSize: Size.fromHeight(30),
@@ -34,6 +68,7 @@ class _HomeState extends State<Home> {
         ),
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
           children: [
             Padding(
@@ -363,10 +398,341 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
+            const SizedBox(
+              height: 60,
+            ),
+            Theme.of(context).brightness == Brightness.light?Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 55.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Shipping estimate',
+                    style: GoogleFonts.roboto(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      color: Color(0xff001c3a),
+                    ),
+                  ),
+                  Text('Register/Login',
+                    style: GoogleFonts.roboto(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      color: Color(0xffBA1A1A)
+                    ),
+                  )
+                ],
+              ),
+            ):Padding(
+              padding: const EdgeInsets.all(55.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Shipping estimate',
+                    style: GoogleFonts.roboto(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      color: Color(0xffD4E3FF),
+                    ),
+                  ),
+                  Text('Register/Login',
+                    style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: Color(0xffBA1A1A)
+                    ),
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 55.0),
+              child: Divider(
+                height: 1,
+              ),
+            ),
+            const SizedBox(
+              height: 70,
+            ),
+            ExpansionTile(
+              collapsedTextColor: Theme.of(context).brightness == Brightness.light?
+              Colors.black:
+              Colors.white,
+              trailing:  Padding(
+                padding: const EdgeInsets.only(right: 200.0),
+                child: RotationTransition(
+                  turns: isExpanded ? AlwaysStoppedAnimation(0.5) : AlwaysStoppedAnimation(0),
+                  child: Icon(Icons.expand_more),
+                ),
+              ),
+                title: Text('Description',
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                  ),
+                ),
+              onExpansionChanged: (bool value) {
+                setState(() {
+                  isExpanded = value;
+                });
+              },
+              iconColor: Theme.of(context).brightness == Brightness.light?
+              Colors.black:
+              Colors.white,
+              textColor: Theme.of(context).brightness == Brightness.light?
+              Colors.black:
+              Colors.white,
+              shape: Border.all(color: Colors.transparent),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text('If you have sensitive skin that causes you problems, even if you\'re a little tired,follow Miracle Kit\'s 4-STEP solution ',
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14
+                  ),
+                  ),
+                ),
+              ],
+
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            ExpansionTile(
+              collapsedTextColor: Theme.of(context).brightness == Brightness.light?
+              Colors.black:
+              Colors.white,
+             trailing:  Padding(
+               padding: const EdgeInsets.only(right: 200.0),
+               child: RotationTransition(
+                 turns: expand ? AlwaysStoppedAnimation(0.5) : AlwaysStoppedAnimation(0),
+                 child: Icon(Icons.expand_more),
+               ),
+             ),
+
+              title: Text('Ingredients',
+                style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                ),
+              ),
+              onExpansionChanged: (bool value) {
+                setState(() {
+                  expand = value;
+                });
+              },
+              iconColor: Theme.of(context).brightness == Brightness.light?
+              Colors.black:
+              Colors.white,
+              textColor: Theme.of(context).brightness == Brightness.light?
+              Colors.black:
+              Colors.white,
+              shape: Border.all(color: Colors.transparent),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text('If you have sensitive skin that causes you problems, even if you\'re a little tired,follow Miracle Kit\'s 4-STEP solution ',
+                    style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14
+                    ),
+                  ),
+                ),
+              ],
+
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            ExpansionTile(
+              collapsedTextColor: Theme.of(context).brightness == Brightness.light?
+              Colors.black:
+              Colors.white,
+              trailing:  Padding(
+                padding: const EdgeInsets.only(right: 200.0),
+                child: RotationTransition(
+                  turns: expanded ? AlwaysStoppedAnimation(0.5) : AlwaysStoppedAnimation(0),
+                  child: Icon(Icons.expand_more),
+                ),
+              ),
+
+              title: Text('Ingredients',
+                style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                ),
+              ),
+              onExpansionChanged: (bool value) {
+                setState(() {
+                  expanded = value;
+                });
+              },
+              iconColor: Theme.of(context).brightness == Brightness.light?
+              Colors.black:
+              Colors.white,
+              textColor: Theme.of(context).brightness == Brightness.light?
+              Colors.black:
+              Colors.white,
+              shape: Border.all(color: Colors.transparent),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text('If you have sensitive skin that causes you problems, even if you\'re a little tired,follow Miracle Kit\'s 4-STEP solution ',
+                    style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14
+                    ),
+                  ),
+                ),
+              ],
+
+            ),
+            const SizedBox(
+              height: 64,
+            ),
+            Container(
+              height: 129,
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(
+                color: Color(0xffD9D9D9),
+                image: DecorationImage(image: AssetImage('asset/images/img6.jpeg'),
+                  fit: BoxFit.cover
+                )
+              ),
+            ),
+            Container(
+              height: 312,
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(
+                  color: Color(0xff29323B),
+                  image: DecorationImage(image: AssetImage('asset/images/img7.jpeg'),
+                      fit: BoxFit.cover
+                  )
+              ),
+            ),
+            Container(
+              height: 256,
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(
+                  color: Color(0xff195FA7),
+                  image: DecorationImage(image: AssetImage('asset/images/img9.jpeg'),
+                      fit: BoxFit.cover
+                  )
+              ),
+            ),
+            Container(
+              height: 256,
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(
+                  color: Color(0xff195FA7),
+                  image: DecorationImage(image: AssetImage('asset/images/img8.jpeg'),
+                      fit: BoxFit.cover
+                  )
+              ),
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+
+            Theme.of(context).brightness == Brightness.light?
+            Image.asset('asset/icons/Group 26086195.jpeg'):
+            Image.asset('asset/icons/Group 26086195.jpeg'),
+            const SizedBox(
+              height: 20,
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 55.0),
+              child: Divider(
+                height: 1,
+              ),
+            ),
+            const SizedBox(
+              height: 190,
+            ),
+            Theme.of(context).brightness ==Brightness.light?SvgPicture.asset('asset/icons/Bottom app bar - ProductPage.svg'):
+            SvgPicture.asset('asset/icons/Bottom app bar.svg'),
+            const SizedBox(
+              height: 10,
+            )
           ],
         ),
       ),
+      floatingActionButton: Visibility(
+        visible: _isVisible,
+        child: Theme.of(context).brightness == Brightness.light?Container(
+          height: 56,
+          width: 128,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Color(0xffD4E3FF),
+            boxShadow:  [
+              BoxShadow(
+                  color: Colors.grey.shade400,
+                  blurRadius: 3.5,
+                  spreadRadius: 1,
+                  offset: const Offset(
+                      1.0,
+                      1.0
+                  )
+              )
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset('asset/icons/shopping_cart_checkout.svg'),
+              const SizedBox(
+                width: 10,
+              ),
+              Text('Buy Now',
+                style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16
+                ),
+              )
+            ],
+          ),
+        ):Container(
+          height: 56,
+          width: 128,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Color(0xff004784),
+            boxShadow:  const [
+              BoxShadow(
+                  color: Colors.black,
+                  blurRadius: 3.5,
+                  spreadRadius: 1,
+                  offset: Offset(
+                      1.0,
+                      1.0
+                  )
+              )
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset('asset/icons/shopping_cart_checkout (1).svg'),
+              const SizedBox(
+                width: 10,
+              ),
+              Text('Buy Now',
+                style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16
+                ),
+              )
+            ],
+          ),
+        )
+      ),
+
     );
+    //
   }
 
    Widget _buildSizeContainer(String label, int size) {

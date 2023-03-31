@@ -38,6 +38,8 @@ dependencies:
   flutter_svg: ^2.0.4
   google_fonts: ^4.0.3
   dynamic_color: ^1.6.2
+  expansion_tile_group: ^1.2.1
+  accordion: ^2.5.1
 
 
 dev_dependencies:
